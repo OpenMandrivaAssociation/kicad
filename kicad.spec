@@ -33,6 +33,7 @@ BuildRequires:	desktop-file-utils
 BuildRequires:	po4a
 BuildRequires:	asciidoc
 BuildRequires:	dblatex
+BuildRequires:	perl(Unicode::GCString)
 Requires:	%{libname}
 Requires:	%{docname}
 
