@@ -31,7 +31,7 @@ BuildRequires:	boost-devel
 BuildRequires:	glew-devel
 BuildRequires:	cairo-devel
 BuildRequires:	openssl-devel
-BuildRequires:	libgomp-devel
+BuildRequires:	gomp-devel
 BuildRequires:	cmake
 
 BuildRequires:	desktop-file-utils
