@@ -28,7 +28,12 @@ BuildRequires:	wxgtku3.0-devel
 BuildRequires:	mesa-common-devel
 BuildRequires:	imagemagick
 BuildRequires:	boost-devel
+BuildRequires:	glew-devel
+BuildRequires:	cairo-devel
+BuildRequires:	openssl-devel
+BuildRequires:	libgomp-devel
 BuildRequires:	cmake
+
 BuildRequires:	desktop-file-utils
 BuildRequires:	po4a
 BuildRequires:	asciidoc
