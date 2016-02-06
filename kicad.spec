@@ -15,8 +15,9 @@
 
 Name:		%{name}
 Summary:	An open source program for the creation of electronic schematic diagrams
+Epoch:		1
 Version:	%{version}
-Release:	1
+Release:	2
 Source0:	%{name}-%{version}.tar.xz
 Source1:	%{docname}-%{version}.tar.gz
 Source2:	%{libname}-%{version}.tar.gz
