@@ -1,11 +1,13 @@
 %define	Werror_cflags	%nil
 %define	debug_package	%nil
+%define _disable_lto 1
+%define date %nil
 
 # Use ./update.sh to generate latest tarballs and the corresponding
 # specfile fragment
 
 %define	name kicad
-%define	version 4.0.1
+%define	version 4.0.5
 
 %define	docname kicad-doc
 
@@ -17,14 +19,20 @@ Name:		%{name}
 Summary:	An open source program for the creation of electronic schematic diagrams
 Epoch:		1
 Version:	%{version}
-Release:	2
+Release:	0.1
+# git clone https://github.com/KiCad/kicad-source-mirror.git
+# pushd kicad-source-mirror
+# git archive --format=tar --prefix %{name}-%{version}-$(date +%Y%m%d)/ HEAD | xz -vf > ../%{name}-%{version}-$(date +%Y%m%d).tar.xz
+# popd
 Source0:	%{name}-%{version}.tar.xz
 Source1:	%{docname}-%{version}.tar.gz
 Source2:	%{libname}-%{version}.tar.gz
 Source3:	%{i18nname}-%{version}.tar.gz
+Source4:	get_kicad.sh
+Source100:	kicad.rpmlintrc
 License:	GPLv2+
 Group:		Sciences/Computer science
-Url:		http://www.lis.inpg.fr/realise_au_lis/kicad/
+Url:		http://www.kicad-pcb.org
 BuildRequires:	wxgtku3.0-devel
 BuildRequires:	mesa-common-devel
 BuildRequires:	imagemagick
@@ -34,10 +42,13 @@ BuildRequires:	cairo-devel
 BuildRequires:	openssl-devel
 BuildRequires:	gomp-devel
 BuildRequires:	cmake
+BuildRequires:	pkgconfig(glm)
+BuildRequires:	curl-devel
 
 BuildRequires:	desktop-file-utils
 BuildRequires:	po4a
 BuildRequires:	asciidoc
+BuildRequires:	a2x
 BuildRequires:	dblatex
 BuildRequires:	perl(Unicode::GCString)
 Requires:	%{libname}
@@ -80,11 +91,18 @@ schematic diagrams and printed circuit board artwork.
 Kicad-library is a set of library needed by kicad.
 
 %prep
-%setup -q -T -b 0 
+%setup -q -T -b 0 -n %{name}-%{version}
 %setup -q -T -b 1 -n %{docname}-%{version}
 %setup -q -T -b 2 -n %{libname}-%{version}
 %setup -q -T -b 3 -n %{i18nname}-%{version}
 cd ..
+
+# proper libname policy
+pushd %{name}-%{version}
+sed -i "s|KICAD_PLUGINS lib/kicad/plugins|KICAD_PLUGINS %{_lib}/kicad/plugins|g" CMakeLists.txt
+# KICAD_LIB ${CMAKE_INSTALL_PREFIX}/lib
+sed -i "s!CMAKE_INSTALL_PREFIX}/lib!CMAKE_INSTALL_PREFIX}/%{_lib}!g" CMakeLists.txt
+popd
 
 %build
 %setup_compile_flags
@@ -111,12 +129,15 @@ popd
 
 # Building kicad
 pushd %{name}-%{version}
+
 	%cmake \
 		-DBUILD_SHARED_LIBS:BOOL=OFF \
 		-DKICAD_STABLE_VERSION:BOOL=ON \
 		-DKICAD_wxUSE_UNICODE=ON \
 		-DCMAKE_BUILD_TYPE=Release \
-		-DKICAD_SKIP_BOOST=ON
+		-DKICAD_SKIP_BOOST=ON \
+		-DKICAD_REPO_NAME=stable \
+		-DBUILD_GITHUB_PLUGIN=ON
 
 	#ugly workaround to fix build
 	#dunno what causes the extra ; in CXX_FLAGS which causes the failure
@@ -175,7 +196,7 @@ popd
 
 %files -f %{name}.lang
 %{_bindir}/*
-%{_prefix}/lib/%{name}/plugins/*.xsl
+%{_libdir}/%{name}/plugins/*.xsl
 %{_iconsdir}/*/*/*
 %{_iconsdir}/%{name}.png
 %{_liconsdir}/%{name}.png
@@ -184,9 +205,7 @@ popd
 %{_datadir}/%{name}/template/
 %{_datadir}/applications
 %{_datadir}/mime/packages/kicad.xml
-%{_datadir}/mimelnk/application/x-kicad-project.desktop
-%{_datadir}/mimelnk/application/x-kicad-schematic.desktop
-%{_datadir}/mimelnk/application/x-kicad-pcb.desktop
+%{_datadir}/mimelnk/application/*.desktop
 
 %files doc
 %doc %{_datadir}/doc/%{name}
