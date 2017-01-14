@@ -48,7 +48,7 @@ BuildRequires:	curl-devel
 BuildRequires:	desktop-file-utils
 BuildRequires:	po4a
 BuildRequires:	asciidoc
-BuildRequires:	a2x
+BuildReqa2x
 BuildRequires:	dblatex
 BuildRequires:	perl(Unicode::GCString)
 Requires:	%{libname}
