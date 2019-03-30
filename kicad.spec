@@ -117,29 +117,21 @@ sed -i "s!CMAKE_INSTALL_PREFIX}/lib!CMAKE_INSTALL_PREFIX}/%{_lib}!g" CMakeLists.
 popd
 
 %build
-%setup_compile_flags
-export CXX="%__cxx -std=c++11"
 export LC_ALL=C
 
 # Building kicad
-
+# Set CMAKE_PREFIX_PATH because of a misconfiguration in opencascade
 	%cmake \
 		-DBUILD_SHARED_LIBS:BOOL=OFF \
-		-DKICAD_STABLE_VERSION:BOOL=ON \
-		-DKICAD_wxUSE_UNICODE=ON \
 		-DCMAKE_BUILD_TYPE=Release \
-		-DKICAD_SKIP_BOOST=ON \
-		-DKICAD_REPO_NAME=stable \
+		-DKICAD_BUILD_VERSION=%{version} \
 		-DBUILD_GITHUB_PLUGIN=ON \
-		-DwxWidgets_CONFIG_EXECUTABLE=%{_bindir}/wx-config
-
-	#ugly workaround to fix build
-	#dunno what causes the extra ; in CXX_FLAGS which causes the failure
-	find . -name flags.make -exec sed -i -e 's,-pthread;-fpermissive,-pthread -fpermissive,g' {} \;
-	find . -name link.txt -exec sed -i -e 's,-pthread;-fpermissive,-pthread -fpermissive,g' {} \;
-
+		-DKICAD_SCRIPTING=ON \
+		-DKICAD_SCRIPTING_MODULES=ON \
+		-DKICAD_SCRIPTING_WXPYTHON=ON \
+		-DCPACK_DO_STRIP=OFF
 	%make_build
-	
+# for %%cmake:
 cd ..
 
 # Building kicad-doc
