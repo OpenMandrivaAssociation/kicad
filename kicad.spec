@@ -137,8 +137,6 @@ cd ..
 # Building kicad-doc
 pushd %{docname}-%{version}
 	%cmake \
-		-DKICAD_STABLE_VERSION:BOOL=ON \
-		-DKICAD_wxUSE_UNICODE=ON \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DBUILD_FORMATS=html
 	%make_build
