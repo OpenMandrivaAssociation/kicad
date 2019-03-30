@@ -120,20 +120,8 @@ popd
 %setup_compile_flags
 export CXX="%__cxx -std=c++11"
 export LC_ALL=C
-cd ../
-
-# Building kicad-doc
-pushd %{docname}-%{version}
-	%cmake \
-		-DKICAD_STABLE_VERSION:BOOL=ON \
-		-DKICAD_wxUSE_UNICODE=ON \
-		-DCMAKE_BUILD_TYPE=Release \
-		-DBUILD_FORMATS=html
-	%make
-popd
 
 # Building kicad
-pushd %{name}-%{version}
 
 	%cmake \
 		-DBUILD_SHARED_LIBS:BOOL=OFF \
@@ -150,7 +138,18 @@ pushd %{name}-%{version}
 	find . -name flags.make -exec sed -i -e 's,-pthread;-fpermissive,-pthread -fpermissive,g' {} \;
 	find . -name link.txt -exec sed -i -e 's,-pthread;-fpermissive,-pthread -fpermissive,g' {} \;
 
-	%make
+	%make_build
+	
+cd ..
+
+# Building kicad-doc
+pushd %{docname}-%{version}
+	%cmake \
+		-DKICAD_STABLE_VERSION:BOOL=ON \
+		-DKICAD_wxUSE_UNICODE=ON \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DBUILD_FORMATS=html
+	%make_build
 popd
 
 
@@ -160,7 +159,7 @@ pushd %{i18nname}-%{version}
 		-DKICAD_STABLE_VERSION:BOOL=ON \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DKICAD_I18N_UNIX_STRICT_PATH=ON
-	%make
+	%make_build
 popd
 
 # Building kicad-symbols
@@ -168,7 +167,7 @@ pushd %{symname}-%{version}
         %cmake \
                 -DKICAD_STABLE_VERSION:BOOL=ON \
                 -DCMAKE_BUILD_TYPE=Release 
-        %make
+        %make_build
 popd
 
 # Building kicad-footprints
@@ -176,7 +175,7 @@ pushd %{footname}-%{version}
         %cmake \
                 -DKICAD_STABLE_VERSION:BOOL=ON \
                 -DCMAKE_BUILD_TYPE=Release
-        %make
+        %make_build
 popd
 
 # Building kicad-templates
@@ -184,7 +183,7 @@ pushd %{tempname}-%{version}
         %cmake \
                 -DKICAD_STABLE_VERSION:BOOL=ON \
                 -DCMAKE_BUILD_TYPE=Release
-        %make
+        %make_build
 popd
 %install
 cd ../
