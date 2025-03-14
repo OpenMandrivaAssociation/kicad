@@ -1,235 +1,293 @@
-%bcond_without	doc
+%global docver 9.0.0
+%global tplver 9.0.0
+%global symver 9.0.0
+%global footver 9.0.0
+%global p3dver 9.0.0
+## NOTE Edit the above version tags if any of the Source component's update
+## NOTE outside of KiCad major releases & bump for major version updates.
+%define cxxstd 20
 
-Summary:	EDA software suite for creation of schematic diagrams and PCBs
 Name:		kicad
-License:	GPLv3+
-Group:		Sciences/Computer science
-Version:	7.0.10
-Release:	2
+Version:	9.0.0
+Release:	1
+Summary:	EDA software suite for creation of schematic diagrams and PCBs
 URL:		https://www.kicad.org
-Source0:	https://gitlab.com/kicad/code/kicad/-/archive/%{version}/%{name}-%{version}.tar.bz2
-Source1:	https://gitlab.com/kicad/services/%{name}-doc/-/archive/%{version}/%{name}-doc-%{version}.tar.bz2
-Source2:	https://gitlab.com/kicad/libraries/%{name}-templates/-/archive/%{version}/%{name}-templates-%{version}.tar.bz2
-Source3:	https://gitlab.com/kicad/libraries/%{name}-symbols/-/archive/%{version}/%{name}-symbols-%{version}.tar.bz2
-Source4:	https://gitlab.com/kicad/libraries/%{name}-footprints/-/archive/%{version}/%{name}-footprints-%{version}.tar.bz2
-Source5:	https://gitlab.com/kicad/libraries/%{name}-packages3D/-/archive/%{version}/%{name}-packages3D-%{version}.tar.bz2
-# (mageia)
-Patch0:		kicad-wxBitmapBundle.patch
-#Patch1:	0001-include-algorithm-so-std-sort-is-found.patch
-Source100:	kicad.rpmlintrc
+License:	GPL-3.0-or-later
+Group:		Sciences/Computer science
+Source0:	https://gitlab.com/kicad/code/kicad/-/archive/%{version}/kicad-%{version}.tar.gz
+Source1:	https://gitlab.com/kicad/services/kicad-doc/-/archive/%{docver}/kicad-doc-%{docver}.tar.gz
+Source2:	https://gitlab.com/kicad/libraries/kicad-templates/-/archive/%{tplver}/kicad-templates-%{tplver}.tar.gz
+Source3:	https://gitlab.com/kicad/libraries/kicad-symbols/-/archive/%{symver}/kicad-symbols-%{symver}.tar.gz
+Source4:	https://gitlab.com/kicad/libraries/kicad-footprints/-/archive/%{footver}/kicad-footprints-%{footver}.tar.gz
+Source5:	https://gitlab.com/kicad/libraries/kicad-packages3D/-/archive/%{p3dver}/kicad-packages3D-%{p3dver}.tar.gz
 
-BuildRequires:	cmake ninja
+############################
+# Upstream only support x86_64 (inc znver1) and aarch64 builds.
+ExclusiveArch:  x86_64 znver1 aarch64
+
+BuildRequires:	boost-devel >= 1.87.0
+BuildRequires:	cmake
+BuildRequires:	cmake(absl)
+BuildRequires:	ninja
 BuildRequires:	chrpath
-BuildRequires:	boost-devel
+BuildRequires:	make
+BuildRequires:	gcc-c++
+BuildRequires:	gettext
 BuildRequires:	desktop-file-utils
 BuildRequires:	doxygen
-#BuildRequires:	git
-BuildRequires:	fontconfig
-#BuildRequires:	gomp-devel
-#BuildRequires:	imagemagick
-BuildRequires:	po4a
-BuildRequires:	source-highlight
-BuildRequires:	opencascade-devel
-BuildRequires:	perl(Unicode::GCString)
-BuildRequires:	python3dist(wxpython)
+BuildRequires:	nng-devel
+BuildRequires:	cmake(harfbuzz)
+BuildRequires:	cmake(openssl)
+BuildRequires:	appstream-util
+BuildRequires:	glibc
+BuildRequires:	glibc-devel
+BuildRequires:	lib64secret1_0
 BuildRequires:	cmake(opencascade)
-BuildRequires:	pkgconfig(appstream-glib)
 BuildRequires:	pkgconfig(cairo)
 BuildRequires:	pkgconfig(egl)
+BuildRequires:	pkgconfig(wayland-egl)
+BuildRequires:	pkgconfig(fmt)
 BuildRequires:	pkgconfig(gl)
+BuildRequires:	pkgconfig(glu)
 BuildRequires:	pkgconfig(glew)
 BuildRequires:	pkgconfig(glm)
-BuildRequires:	pkgconfig(glu)
+BuildRequires:	pkgconfig(glib-2.0)
 BuildRequires:	pkgconfig(gtk+-3.0)
+BuildRequires:	pkgconfig(appstream-glib)
 BuildRequires:	pkgconfig(libcurl)
-BuildRequires:	pkgconfig(ngspice)
-BuildRequires:	pkgconfig(odbc)
-BuildRequires:	pkgconfig(openssl)
-BuildRequires:	pkgconfig(python3)
-BuildRequires:	pkgconfig(sm)
-BuildRequires:	pkgconfig(zlib)
+BuildRequires:	pkgconfig(libgit2)
+BuildRequires:	pkgconfig(libsecret-1)
+BuildRequires:	lib64ngspice-devel
+BuildRequires:	pkgconfig(pixman-1)
+BuildRequires:	pkgconfig(protobuf)
+BuildRequires:	protobuf-compiler >= 28.3
+BuildRequires:	python-devel >= 3.11
+BuildRequires:	python-wxpython >= 4.0
+BuildRequires:	shared-mime-info
+BuildRequires:	pkgconfig(source-highlight)
 BuildRequires:	swig
+BuildRequires:	pkgconfig(odbc)
+BuildRequires:	wxqtu3.2-devel
 BuildRequires:	wxgtku3.2-devel
+BuildRequires:	pkgconfig(libzstd)
+BuildRequires:	pkgconfig(zlib-ng)
+
+############################
+# Documentation
 BuildRequires:	po4a
-#BuildRequires:	rubygem-asciidoctor
-%if %{with doc}
 BuildRequires:	a2x
-BuildRequires:	asciidoc
 BuildRequires:	asciidoctor
-#BuildRequires:	dblatex
-%endif
 
-Requires:	%{name}-doc
-Requires:	python3dist(wxpython)
+############################
+Provides:	bundled(fmt) >= 9.0.0
+Provides:	bundled(libdxflib) >= 3.26.4
+Provides:	bundled(polyclipping) >= 6.4.2
+Provides:	bundled(potrace) >= 1.15
 
-Obsoletes:	%{name}-library < %{EVRD}
+############################
+Requires:	pkgconfig(libgit2)
+Requires:	pkgconfig(libsecret-1)
+Requires:	pkgconfig(ngspice)
+Requires:	pkgconfig(protobuf)
+Requires:	python-wxpython >= 4.0
+Requires:	pkgconfig(odbc)
+
+Suggests:	kicad
 
 %description
-Kicad is an open source (GPL) program for the creation of electronic
-schematic diagrams and printed circuit board artwork.
+KiCad is EDA software to design electronic schematic diagrams and printed
+circuit board artwork of up to 32 layers.
 
-Kicad is a set of four programs and a project manager:
+############################
+%package	packages3d
+Summary:	3D Models for KiCad
+License:	CC-BY-SA
+BuildArch:	noarch
+Requires:	kicad >= 9.0.0
 
-* Eeschema:	Schematic entry.
-* Pcbnew:	Board editor.
-* Gerbview:	GERBER viewer (photoplotter documents).
-* Cvpcb:	footprint selector for components used in the circuit design.
-* Kicad:	project manager.
+%description	packages3d
+3D Models for KiCad.
 
-%files -f %{name}.lang
-%license LICENSE*
-%doc AUTHORS.txt README-*.md
-%{_bindir}/*
-%{_libdir}/%{name}
-%{_libdir}/*.so*
-%{py3_platsitedir}/*
-%{_datadir}/%{name}
-%{_datadir}/applications
-%{_datadir}/mime/packages/kicad*.xml
-%{_iconsdir}/*/*/*
-%{_metainfodir}/*metainfo.xml
-
-#----------------------------------------------------------------------------
-
-%package doc
-Summary:	Documentation for kicad (creation of electronic schematic diagrams)
-License:	GPLv3+ or CC-BY
+############################
+%package	doc
+Summary:	Documentation for KiCad
+License:	GPL-3.0-or-later or CC-BY
 BuildArch:	noarch
 
-%description doc
-Kicad is an open source (GPL) program for the creation of electronic
-schematic diagrams and printed circuit board artwork.
+%description	doc
+Documentation for KiCad.
 
-%{name}-doc is the documentation for kicad.
-
-%files doc
-%doc %{_datadir}/doc/%{name}
-
-#----------------------------------------------------------------------------
-
+############################
 %prep
-# (mandian) this is a workaround suggested by berolinux
-# in order to handle multiple sources because autosetup
-# fails
-%setup -a1 -a2 -a3 -a4 -a5
+%setup -q -n %{name}-%{version} -a1 -a2 -a3 -a4 -a5
 %autopatch -p1
 
+############################
 %build
-export LDFLAGS="%{ldflags} `pkg-config --libs libcurl`"
 
-# kicad
+export CFLAGS="%{optflags}"
+export CXXFLAGS="%{optflags}"
+export LDFLAGS="%{ldflags} -v -Wl,--verbose --warn-backrefs"
+
+# KiCad
+# NOTE Keep KICAD_USE_CMAKE_FINDPROTOBUF set OFF, setting this ON will break
+# NOTE the build on modern platforms using CMake.
 pushd .
 %cmake \
+	-DCMAKE_CXX_STANDARD=%{cxxstd} \
+	-DCMAKE_C_COMPILER="/usr/bin/clang" \
+	-DCMAKE_CXX_COMPILER="/usr/bin/clang++" \
 	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
-	-DKICAD_BUILD_I18N:BOOL=ON \
-	-DKICAD_BUILD_QA_TESTS:BOOL=OFF \
-	-DKICAD_I18N_UNIX_STRICT_PATH:BOOL=ON \
-	-DKICAD_INSTALL_DEMOS:BOOL=ON \
-	-DKICAD_PCM:BOOL=ON \
-	-DKICAD_SCRIPTING:BOOL=ON \
-	-DKICAD_SCRIPTING_ACTION_MENU:BOOL=ON \
-	-DKICAD_SCRIPTING_MODULES:BOOL=ON \
-	-DKICAD_SCRIPTING_PYTHON3:BOOL=ON \
-	-DKICAD_SCRIPTING_WXPYTHON:BOOL=ON \
-	-DKICAD_SPICE:BOOL=ON \
-	-DKICAD_USE_EGL:BOOL=ON \
-	-DKICAD_USE_OCC:BOOL=ON \
+	-DCMAKE_INSTALL_DATADIR=%{_datadir} \
+	-DCMAKE_INSTALL_DOCDIR=%{_docdir} \
+	-DPYTHON_SITE_PACKAGE_PATH=%{python_sitearch} \
+	-DKICAD_SCRIPTING_WXPYTHON=ON \
+	-DKICAD_BUILD_I18N=ON \
+	-DKICAD_BUILD_QA_TESTS=OFF \
+	-DKICAD_USE_EGL=ON \
+	-DKICAD_USE_BUNDLED_GLEW=OFF \
+	-DKICAD_WAYLAND=ON \
+	-DKICAD_INSTALL_DEMOS=ON \
+	-DKICAD_I18N_UNIX_STRICT_PATH=ON \
+	-DKICAD_STDLIB_DEBUG=ON \
+	-DKICAD_MAKE_LINK_MAPS=ON \
+	-DKICAD_IPC_API=ON \
+	-DKICAD_IDF_TOOLS=ON \
+	-DKICAD_USE_CMAKE_FINDPROTOBUF=OFF \
 	-DKICAD_VERSION_EXTRA=%{release} \
-	-DPYTHON_SITE_PACKAGE_PATH=%{python3_sitearch} \
+	-DKICAD_DATA=%{_datadir}/%{name} \
+	-DKICAD_DOCS=%{_docdir}/%{name} \
 	-G Ninja
 %ninja_build
 popd
 
-# docs (HTML only)
-%if %{with doc}
-pwd
-pushd %{name}-doc-%{version}
+# Templates
+pushd %{name}-templates-%{tplver}/
 %cmake \
-	-DBUILD_FORMATS=html \
+	-G Ninja \
+	-DCMAKE_CXX_STANDARD=%{cxxstd} \
+	-DKICAD_DATA=%{_datadir}/%{name}
+%ninja_build
+popd
+
+# Symbol libraries
+pushd %{name}-symbols-%{symver}/
+%cmake \
+	-G Ninja \
+	-DCMAKE_CXX_STANDARD=%{cxxstd} \
+	-DKICAD_DATA=%{_datadir}/%{name}
+%ninja_build
+popd
+
+# Footprint libraries
+pushd %{name}-footprints-%{footver}/
+%cmake \
+	-G Ninja \
+	-DCMAKE_CXX_STANDARD=%{cxxstd} \
+	-DKICAD_DATA=%{_datadir}/%{name}
+%ninja_build
+popd
+
+# 3D models
+pushd %{name}-packages3D-%{p3dver}/
+%cmake \
+	-G Ninja \
+	-DCMAKE_CXX_STANDARD=%{cxxstd} \
+	-DKICAD_DATA=%{_datadir}/%{name}
+%ninja_build
+popd
+
+# Documentation (HTML only)
+pushd %{name}-doc-%{docver}/
+%cmake \
+	-G Ninja \
+	-DCMAKE_CXX_STANDARD=%{cxxstd} \
+	-DKICAD_DOC_PATH=%{_docdir}/kicad/help \
 	-DPDF_GENERATOR=none \
-	-G Ninja
-%ninja_build
-popd
-%endif
-
-# footprints
-pushd %{name}-footprints-%{version}
-%cmake -G Ninja
+	-DBUILD_FORMATS=html
 %ninja_build
 popd
 
-# packages3D
-pushd %{name}-packages3D-%{version}
-%cmake -G Ninja
-%ninja_build
-popd
-
-# symbols
-pushd %{name}-symbols-%{version}
-%cmake -G Ninja
-%ninja_build
-popd
-
-# templates
-pushd %{name}-templates-%{version}
-%cmake -G Ninja
-%ninja_build
-popd
-
+############################
 %install
-# kicad
+
+# KiCad application
 %ninja_install -C build
 
 # Binaries must be executable to be detected by find-debuginfo.sh
-#chmod +x %{buildroot}%{python3_sitearch}/_pcbnew.so
+chmod +x %{buildroot}%{python3_sitearch}/_pcbnew.so
 
 # Binaries are not allowed to contain rpaths
-#chrpath --delete %{buildroot}%{python3_sitearch}/_pcbnew.so
+chrpath --delete %{buildroot}%{python3_sitearch}/_pcbnew.so
 
-# footprints
-pushd %{name}-footprints-%{version}
-%ninja_install -C build
-cp -p LICENSE.md ../LICENSE-footprints.md
-cp -p README.md ../README-footprints.md
-popd
-
-# packages3D
-pushd %{name}-packages3D-%{version}
-%ninja_install -C build
-cp -p LICENSE.md ../LICENSE-packages3D.md
-cp -p README.md ../README-packages3D.md
-popd
-
-# symbols
-pushd %{name}-symbols-%{version}
-%ninja_install -C build
-cp -p LICENSE.md ../LICENSE-symbols.md
-cp -p README.md ../README-symbols.md
-popd
-
-# templates
-pushd %{name}-templates-%{version}
-%ninja_install -C build
-cp -p LICENSE.md ../LICENSE-templates.md
-cp -p README.md ../README-templates.md
-popd
-
-# docs (HTML only)
-%if %{with doc}
-pushd %{name}-doc-%{version}
-%ninja_install -C build
-popd
-%endif
-
-# .desktop
+# Install desktop
 for desktopfile in %{buildroot}%{_datadir}/applications/*.desktop ; do
 	desktop-file-install \
-		--remove-category='Scientific' \
-		--add-category='Science;Electronics;Education' \
-		--dir=%buildroot%{_datadir}/applications \
-		${desktopfile}
+	--dir %{buildroot}%{_datadir}/applications \
+	--delete-original                          \
+	${desktopfile}
 done
 
-# locales
+# Templates
+pushd %{name}-templates-%{tplver}/
+%ninja_install -C build
+cp -p LICENSE.md ../LICENSE-templates.md
+popd
+
+# Symbol libraries
+pushd %{name}-symbols-%{symver}/
+%ninja_install -C build
+cp -p LICENSE.md ../LICENSE-symbols.md
+popd
+
+# Footprint libraries
+pushd %{name}-footprints-%{footver}/
+%ninja_install -C build
+cp -p LICENSE.md ../LICENSE-footprints.md
+popd
+
+# 3D models
+pushd %{name}-packages3D-%{p3dver}/
+%ninja_install -C build
+popd
+
+# Documentation
+pushd %{name}-doc-%{docver}/
+%ninja_install -C build
+popd
+
 %find_lang %{name}
+
+############################
+%check
+appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
+
+############################
+%files	-f %{name}.lang
+%doc AUTHORS.txt
+%attr(0755, root, root) %{_bindir}/*
+%{_libdir}/%{name}/
+%{_libdir}/libkiapi.so*
+%{_libdir}/libkicad_3dsg.so*
+%{_libdir}/libkigal.so*
+%{_libdir}/libkicommon.so*
+%{python3_sitearch}/_pcbnew.so
+%{python3_sitearch}/pcbnew.py
+%{_datadir}/%{name}/
+%{_datadir}/applications/*.desktop
+%{_datadir}/icons/hicolor/*/apps/*.*
+%{_datadir}/icons/hicolor/*/mimetypes/application-x-*.*
+%{_datadir}/mime/packages/*.xml
+%{_metainfodir}/*.metainfo.xml
+%license LICENSE*
+%exclude %{_datadir}/%{name}/3dmodels/*
+
+%files	packages3d
+%{_datadir}/%{name}/3dmodels/*.3dshapes
+%license %{name}-packages3D-%{p3dver}/LICENSE*
+
+%files	doc
+%{_docdir}/%{name}/help/
+%exclude %{_docdir}/%{name}/AUTHORS.txt
+%license %{name}-doc-%{docver}/LICENSE*
 
