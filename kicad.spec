@@ -9,7 +9,7 @@
 
 Name:		kicad
 Version:	9.0.0
-Release:	1
+Release:	2
 Summary:	EDA software suite for creation of schematic diagrams and PCBs
 URL:		https://www.kicad.org
 License:	GPL-3.0-or-later
@@ -44,11 +44,8 @@ BuildRequires:	glibc-devel
 BuildRequires:	lib64secret1_0
 BuildRequires:	cmake(opencascade)
 BuildRequires:	pkgconfig(cairo)
-BuildRequires:	pkgconfig(egl)
-BuildRequires:	pkgconfig(wayland-egl)
 BuildRequires:	pkgconfig(fmt)
-BuildRequires:	pkgconfig(gl)
-BuildRequires:	pkgconfig(glu)
+BuildRequires:	pkgconfig(glut)
 BuildRequires:	pkgconfig(glew)
 BuildRequires:	pkgconfig(glm)
 BuildRequires:	pkgconfig(glib-2.0)
@@ -67,7 +64,6 @@ BuildRequires:	shared-mime-info
 BuildRequires:	pkgconfig(source-highlight)
 BuildRequires:	swig
 BuildRequires:	pkgconfig(odbc)
-BuildRequires:	wxqtu3.2-devel
 BuildRequires:	wxgtku3.2-devel
 BuildRequires:	pkgconfig(libzstd)
 BuildRequires:	pkgconfig(zlib-ng)
@@ -93,6 +89,9 @@ Requires:	python-wxpython >= 4.0
 Requires:	pkgconfig(odbc)
 
 Suggests:	kicad
+Obsoletes:	%{name}-library < %{EVRD}
+Obsoletes:	%{name}-unstable < %{EVRD}
+
 
 %description
 KiCad is EDA software to design electronic schematic diagrams and printed
@@ -113,6 +112,7 @@ Requires:	kicad >= 9.0.0
 Summary:	Documentation for KiCad
 License:	GPL-3.0-or-later or CC-BY
 BuildArch:	noarch
+Obsoletes:	%{name}-doc < %{docver}
 
 %description	doc
 Documentation for KiCad.
@@ -130,8 +130,9 @@ export CXXFLAGS="%{optflags}"
 export LDFLAGS="%{ldflags} -v -Wl,--verbose --warn-backrefs"
 
 # KiCad
-# NOTE Keep KICAD_USE_CMAKE_FINDPROTOBUF set OFF, setting this ON will break
+# NOTE Keep KICAD_USE_CMAKE_FINDPROTOBUF set OFF, setting this ON will break-
 # NOTE the build on modern platforms using CMake.
+# NOTE Keep KICAD_WAYLAND set OFF, Wayland is unsuported by upstream at this time.
 pushd .
 %cmake \
 	-DCMAKE_CXX_STANDARD=%{cxxstd} \
@@ -145,8 +146,8 @@ pushd .
 	-DKICAD_BUILD_I18N=ON \
 	-DKICAD_BUILD_QA_TESTS=OFF \
 	-DKICAD_USE_EGL=ON \
-	-DKICAD_USE_BUNDLED_GLEW=OFF \
-	-DKICAD_WAYLAND=ON \
+	-DKICAD_WAYLAND=OFF \
+	-DKICAD_USE_OCC=ON \
 	-DKICAD_INSTALL_DEMOS=ON \
 	-DKICAD_I18N_UNIX_STRICT_PATH=ON \
 	-DKICAD_STDLIB_DEBUG=ON \
@@ -290,4 +291,3 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
 %{_docdir}/%{name}/help/
 %exclude %{_docdir}/%{name}/AUTHORS.txt
 %license %{name}-doc-%{docver}/LICENSE*
-
