@@ -9,7 +9,7 @@
 
 Name:		kicad
 Version:	9.0.0
-Release:	2
+Release:	3
 Summary:	EDA software suite for creation of schematic diagrams and PCBs
 URL:		https://www.kicad.org
 License:	GPL-3.0-or-later
