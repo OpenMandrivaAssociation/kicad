@@ -1,0 +1,12 @@
+diff -up kicad-9.0.0/include/api/api_handler.h.omv~ kicad-9.0.0/include/api/api_handler.h
+--- kicad-9.0.0/include/api/api_handler.h.omv~	2025-03-20 06:29:18.262624410 +0100
++++ kicad-9.0.0/include/api/api_handler.h	2025-03-20 06:29:24.250301371 +0100
+@@ -93,7 +93,7 @@ protected:
+     void registerHandler( HANDLER_RESULT<ResponseType> ( HandlerType::*aHandler )(
+             const HANDLER_CONTEXT<RequestType>& ) )
+     {
+-        std::string typeName = RequestType().GetTypeName();
++        std::string typeName(RequestType().GetTypeName());
+ 
+         wxASSERT_MSG( !m_handlers.count( typeName ),
+                       wxString::Format( "Duplicate API handler for type %s", typeName ) );

@@ -22,9 +22,6 @@ Source4:	https://gitlab.com/kicad/libraries/kicad-footprints/-/archive/%{footver
 Source5:	https://gitlab.com/kicad/libraries/kicad-packages3D/-/archive/%{p3dver}/kicad-packages3D-%{p3dver}.tar.gz
 
 ############################
-# Upstream only support x86_64 (inc znver1) and aarch64 builds.
-ExclusiveArch:  x86_64 znver1 aarch64
-
 BuildRequires:	boost-devel >= 1.87.0
 BuildRequires:	cmake
 BuildRequires:	cmake(absl)
@@ -96,6 +93,9 @@ Obsoletes:	%{name}-unstable < %{EVRD}
 %description
 KiCad is EDA software to design electronic schematic diagrams and printed
 circuit board artwork of up to 32 layers.
+
+%patchlist
+kicad-protobuf-30.patch
 
 ############################
 %package	packages3d
