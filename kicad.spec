@@ -1,15 +1,15 @@
-%global docver 9.0.0
-%global tplver 9.0.0
-%global symver 9.0.0
-%global footver 9.0.0
-%global p3dver 9.0.0
+%global docver 9.0.1
+%global tplver 9.0.1
+%global symver 9.0.1
+%global footver 9.0.1
+%global p3dver 9.0.1
 ## NOTE Edit the above version tags if any of the Source component's update
 ## NOTE outside of KiCad major releases & bump for major version updates.
 %define cxxstd 20
 
 Name:		kicad
-Version:	9.0.0
-Release:	3
+Version:	9.0.1
+Release:	1
 Summary:	EDA software suite for creation of schematic diagrams and PCBs
 URL:		https://www.kicad.org
 License:	GPL-3.0-or-later
@@ -54,7 +54,7 @@ BuildRequires:	pkgconfig(libsecret-1)
 BuildRequires:	lib64ngspice-devel
 BuildRequires:	pkgconfig(pixman-1)
 BuildRequires:	pkgconfig(protobuf)
-BuildRequires:	protobuf-compiler >= 28.3
+BuildRequires:	protobuf-compiler >= 30.2
 BuildRequires:	python-devel >= 3.11
 BuildRequires:	python-wxpython >= 4.0
 BuildRequires:	shared-mime-info
@@ -94,8 +94,7 @@ Obsoletes:	%{name}-unstable < %{EVRD}
 KiCad is EDA software to design electronic schematic diagrams and printed
 circuit board artwork of up to 32 layers.
 
-%patchlist
-kicad-protobuf-30.patch
+#%%patchlist
 
 ############################
 %package	packages3d
