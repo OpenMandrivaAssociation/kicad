@@ -1,15 +1,15 @@
-%global docver 9.0.2
-%global tplver 9.0.2
-%global symver 9.0.2
-%global footver 9.0.2
-%global p3dver 9.0.2
+%global docver 9.0.6
+%global tplver 9.0.6
+%global symver 9.0.6
+%global footver 9.0.6
+%global p3dver 9.0.6
 ## NOTE Edit the above version tags if any of the Source component's update
 ## NOTE outside of KiCad major releases & bump for major version updates.
 %define cxxstd 20
 
 Name:		kicad
-Version:	9.0.2
-Release:	3
+Version:	9.0.6
+Release:	1
 Summary:	EDA software suite for creation of schematic diagrams and PCBs
 URL:		https://www.kicad.org
 License:	GPL-3.0-or-later
@@ -99,7 +99,7 @@ circuit board artwork of up to 32 layers.
 ############################
 %package	packages3d
 Summary:	3D Models for KiCad
-License:	CC-BY-SA
+License:	CC-BY-SA-4.0
 BuildArch:	noarch
 Requires:	kicad >= 9.0.0
 
@@ -109,7 +109,7 @@ Requires:	kicad >= 9.0.0
 ############################
 %package	doc
 Summary:	Documentation for KiCad
-License:	GPL-3.0-or-later or CC-BY
+License:	GPL-3.0-or-later or CC-BY-3.0
 BuildArch:	noarch
 Obsoletes:	%{name}-doc < %{docver}
 
