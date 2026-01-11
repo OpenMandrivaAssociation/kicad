@@ -1,2 +1,5 @@
 addFilter("E: incoherent-version-in-name")
 addFilter("E: devel-file-in-non-devel-package")
+# false positives
+addFilter("E: executable-in-library-package")
+addFilter("E: non-versioned-file-in-library-package")

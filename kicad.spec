@@ -1,15 +1,15 @@
-%global docver 9.0.6
-%global tplver 9.0.6
-%global symver 9.0.6
-%global footver 9.0.6
-%global p3dver 9.0.6
+%global docver 9.0.7
+%global tplver 9.0.7
+%global symver 9.0.7
+%global footver 9.0.7
+%global p3dver 9.0.7
 ## NOTE Edit the above version tags if any of the Source component's update
 ## NOTE outside of KiCad major releases & bump for major version updates.
 %define cxxstd 20
 
 Name:		kicad
-Version:	9.0.6
-Release:	2
+Version:	9.0.7
+Release:	1
 Summary:	EDA software suite for creation of schematic diagrams and PCBs
 URL:		https://www.kicad.org
 License:	GPL-3.0-or-later
@@ -28,6 +28,7 @@ BuildRequires:	cmake(absl)
 BuildRequires:	ninja
 BuildRequires:	chrpath
 BuildRequires:	make
+BuildRequires:	fdupes
 BuildRequires:	gcc-c++
 BuildRequires:	gettext
 BuildRequires:	desktop-file-utils
@@ -68,7 +69,6 @@ BuildRequires:	pkgconfig(zlib-ng)
 ############################
 # Documentation
 BuildRequires:	po4a
-BuildRequires:	a2x
 BuildRequires:	asciidoctor
 
 ############################
@@ -202,6 +202,7 @@ pushd %{name}-doc-%{docver}/
 %cmake \
 	-G Ninja \
 	-DCMAKE_CXX_STANDARD=%{cxxstd} \
+	-DADOC_TOOLCHAIN="ASCIIDOCTOR" \
 	-DKICAD_DOC_PATH=%{_docdir}/kicad/help \
 	-DPDF_GENERATOR=none \
 	-DBUILD_FORMATS=html
@@ -255,6 +256,13 @@ popd
 pushd %{name}-doc-%{docver}/
 %ninja_install -C build
 popd
+
+# find dupes
+%fdupes %{buildroot}/%{_datadir}/kicad/
+%fdupes %{buildroot}%{_datadir}/icons/hicolor
+for lang in ca de en es fr id it ja pl ru zh ; do
+    %fdupes %{buildroot}%{_docdir}/kicad/help/$lang
+done
 
 %find_lang %{name}
 
