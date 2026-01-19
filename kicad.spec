@@ -9,7 +9,7 @@
 
 Name:		kicad
 Version:	9.0.7
-Release:	1
+Release:	2
 Summary:	EDA software suite for creation of schematic diagrams and PCBs
 URL:		https://www.kicad.org
 License:	GPL-3.0-or-later
@@ -39,7 +39,6 @@ BuildRequires:	cmake(openssl)
 BuildRequires:	appstream-util
 BuildRequires:	glibc
 BuildRequires:	glibc-devel
-BuildRequires:	lib64secret1_0
 BuildRequires:	cmake(opencascade)
 BuildRequires:	pkgconfig(cairo)
 BuildRequires:	pkgconfig(fmt)
@@ -52,11 +51,11 @@ BuildRequires:	pkgconfig(appstream-glib)
 BuildRequires:	pkgconfig(libcurl)
 BuildRequires:	pkgconfig(libgit2)
 BuildRequires:	pkgconfig(libsecret-1)
-BuildRequires:	lib64ngspice-devel
+BuildRequires:	pkgconfig(ngspice)
 BuildRequires:	pkgconfig(pixman-1)
 BuildRequires:	pkgconfig(protobuf)
+BuildRequires:	pkgconfig(python3)
 BuildRequires:	protobuf-compiler >= 30.2
-BuildRequires:	python-devel >= 3.11
 BuildRequires:	python-wxpython >= 4.0
 BuildRequires:	shared-mime-info
 BuildRequires:	pkgconfig(source-highlight)
