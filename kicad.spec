@@ -1,15 +1,15 @@
-%global docver 9.0.7
-%global tplver 9.0.7
-%global symver 9.0.7
-%global footver 9.0.7
-%global p3dver 9.0.7
+%global docver 9.0.8
+%global tplver 9.0.8
+%global symver 9.0.8
+%global footver 9.0.8
+%global p3dver 9.0.8
 ## NOTE Edit the above version tags if any of the Source component's update
 ## NOTE outside of KiCad major releases & bump for major version updates.
 %define cxxstd 20
 
 Name:		kicad
-Version:	9.0.7
-Release:	2
+Version:	9.0.8
+Release:	1
 Summary:	EDA software suite for creation of schematic diagrams and PCBs
 URL:		https://www.kicad.org
 License:	GPL-3.0-or-later
@@ -145,7 +145,6 @@ pushd .
 	-DKICAD_BUILD_QA_TESTS=OFF \
 	-DKICAD_USE_EGL=ON \
 	-DKICAD_WAYLAND=OFF \
-	-DKICAD_USE_OCC=ON \
 	-DKICAD_INSTALL_DEMOS=ON \
 	-DKICAD_I18N_UNIX_STRICT_PATH=ON \
 	-DKICAD_STDLIB_DEBUG=ON \
