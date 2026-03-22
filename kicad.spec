@@ -1,45 +1,38 @@
-%global docver 9.0.8
-%global tplver 9.0.8
-%global symver 9.0.8
-%global footver 9.0.8
-%global p3dver 9.0.8
-## NOTE Edit the above version tags if any of the Source component's update
-## NOTE outside of KiCad major releases & bump for major version updates.
-%define cxxstd 20
-
 Name:		kicad
-Version:	9.0.8
+Version:	10.0.0
 Release:	1
 Summary:	EDA software suite for creation of schematic diagrams and PCBs
 URL:		https://www.kicad.org
 License:	GPL-3.0-or-later
 Group:		Sciences/Computer science
 Source0:	https://gitlab.com/kicad/code/kicad/-/archive/%{version}/kicad-%{version}.tar.gz
-Source1:	https://gitlab.com/kicad/services/kicad-doc/-/archive/%{docver}/kicad-doc-%{docver}.tar.gz
-Source2:	https://gitlab.com/kicad/libraries/kicad-templates/-/archive/%{tplver}/kicad-templates-%{tplver}.tar.gz
-Source3:	https://gitlab.com/kicad/libraries/kicad-symbols/-/archive/%{symver}/kicad-symbols-%{symver}.tar.gz
-Source4:	https://gitlab.com/kicad/libraries/kicad-footprints/-/archive/%{footver}/kicad-footprints-%{footver}.tar.gz
-Source5:	https://gitlab.com/kicad/libraries/kicad-packages3D/-/archive/%{p3dver}/kicad-packages3D-%{p3dver}.tar.gz
-
+Source1:	https://gitlab.com/kicad/services/kicad-doc/-/archive/%{version}/kicad-doc-%{version}.tar.gz
+Source2:	https://gitlab.com/kicad/libraries/kicad-templates/-/archive/%{version}/kicad-templates-%{version}.tar.gz
+Source3:	https://gitlab.com/kicad/libraries/kicad-symbols/-/archive/%{version}/kicad-symbols-%{version}.tar.gz
+Source4:	https://gitlab.com/kicad/libraries/kicad-footprints/-/archive/%{version}/kicad-footprints-%{version}.tar.gz
+Source5:	https://gitlab.com/kicad/libraries/kicad-packages3D/-/archive/%{version}/kicad-packages3D-%{version}.tar.gz
+# Source the rpmlintrc to clean false positives from build logs.
+Source100:	%{name}.rpmlintrc
 ############################
+BuildRequires:	appstream-util
 BuildRequires:	boost-devel >= 1.87.0
+BuildRequires:	chrpath
 BuildRequires:	cmake
 BuildRequires:	cmake(absl)
-BuildRequires:	ninja
-BuildRequires:	chrpath
-BuildRequires:	make
+BuildRequires:	cmake(harfbuzz)
+BuildRequires:	cmake(opencascade)
+BuildRequires:	cmake(openssl)
+BuildRequires:	desktop-file-utils
+BuildRequires:	doxygen
 BuildRequires:	fdupes
 BuildRequires:	gcc-c++
 BuildRequires:	gettext
-BuildRequires:	desktop-file-utils
-BuildRequires:	doxygen
-BuildRequires:	nng-devel
-BuildRequires:	cmake(harfbuzz)
-BuildRequires:	cmake(openssl)
-BuildRequires:	appstream-util
 BuildRequires:	glibc
 BuildRequires:	glibc-devel
-BuildRequires:	cmake(opencascade)
+BuildRequires:	make
+BuildRequires:	ninja
+BuildRequires:	nng-devel
+BuildRequires:	pkgconfig(appstream-glib)
 BuildRequires:	pkgconfig(cairo)
 BuildRequires:	pkgconfig(fmt)
 BuildRequires:	pkgconfig(glut)
@@ -47,23 +40,24 @@ BuildRequires:	pkgconfig(glew)
 BuildRequires:	pkgconfig(glm)
 BuildRequires:	pkgconfig(glib-2.0)
 BuildRequires:	pkgconfig(gtk+-3.0)
-BuildRequires:	pkgconfig(appstream-glib)
 BuildRequires:	pkgconfig(libcurl)
 BuildRequires:	pkgconfig(libgit2)
 BuildRequires:	pkgconfig(libsecret-1)
+BuildRequires:	pkgconfig(libzstd)
 BuildRequires:	pkgconfig(ngspice)
+BuildRequires:	pkgconfig(odbc)
 BuildRequires:	pkgconfig(pixman-1)
+BuildRequires:	pkgconfig(poppler-glib)
 BuildRequires:	pkgconfig(protobuf)
 BuildRequires:	pkgconfig(python3)
+BuildRequires:	pkgconfig(source-highlight)
+BuildRequires:	pkgconfig(spnav)
+BuildRequires:	pkgconfig(zlib-ng)
 BuildRequires:	protobuf-compiler >= 30.2
 BuildRequires:	python-wxpython >= 4.0
 BuildRequires:	shared-mime-info
-BuildRequires:	pkgconfig(source-highlight)
 BuildRequires:	swig
-BuildRequires:	pkgconfig(odbc)
 BuildRequires:	wxgtku3.2-devel
-BuildRequires:	pkgconfig(libzstd)
-BuildRequires:	pkgconfig(zlib-ng)
 
 ############################
 # Documentation
@@ -80,11 +74,11 @@ Provides:	bundled(potrace) >= 1.15
 Requires:	pkgconfig(libgit2)
 Requires:	pkgconfig(libsecret-1)
 Requires:	pkgconfig(ngspice)
+Requires:	pkgconfig(odbc)
 Requires:	pkgconfig(protobuf)
 Requires:	python-wxpython >= 4.0
-Requires:	pkgconfig(odbc)
-
 Suggests:	kicad
+
 Obsoletes:	%{name}-library < %{EVRD}
 Obsoletes:	%{name}-unstable < %{EVRD}
 
@@ -100,7 +94,7 @@ circuit board artwork of up to 32 layers.
 Summary:	3D Models for KiCad
 License:	CC-BY-SA-4.0
 BuildArch:	noarch
-Requires:	kicad >= 9.0.0
+Requires:	kicad >= %{version}-%{release}
 
 %description	packages3d
 3D Models for KiCad.
@@ -110,7 +104,7 @@ Requires:	kicad >= 9.0.0
 Summary:	Documentation for KiCad
 License:	GPL-3.0-or-later or CC-BY-3.0
 BuildArch:	noarch
-Obsoletes:	%{name}-doc < %{docver}
+Obsoletes:	%{name}-doc < %{version}
 
 %description	doc
 Documentation for KiCad.
@@ -133,7 +127,6 @@ export LDFLAGS="%{ldflags} -v -Wl,--verbose --warn-backrefs"
 # NOTE Keep KICAD_WAYLAND set OFF, Wayland is unsuported by upstream at this time.
 pushd .
 %cmake \
-	-DCMAKE_CXX_STANDARD=%{cxxstd} \
 	-DCMAKE_C_COMPILER="/usr/bin/clang" \
 	-DCMAKE_CXX_COMPILER="/usr/bin/clang++" \
 	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -160,51 +153,47 @@ pushd .
 popd
 
 # Templates
-pushd %{name}-templates-%{tplver}/
+pushd %{name}-templates-%{version}/
 %cmake \
 	-G Ninja \
-	-DCMAKE_CXX_STANDARD=%{cxxstd} \
 	-DKICAD_DATA=%{_datadir}/%{name}
 %ninja_build
 popd
 
 # Symbol libraries
-pushd %{name}-symbols-%{symver}/
+pushd %{name}-symbols-%{version}/
 %cmake \
 	-G Ninja \
-	-DCMAKE_CXX_STANDARD=%{cxxstd} \
+	-DKICAD_PACK_SYM_LIBRARIES=ON \
 	-DKICAD_DATA=%{_datadir}/%{name}
 %ninja_build
 popd
 
 # Footprint libraries
-pushd %{name}-footprints-%{footver}/
+pushd %{name}-footprints-%{version}/
 %cmake \
 	-G Ninja \
-	-DCMAKE_CXX_STANDARD=%{cxxstd} \
 	-DKICAD_DATA=%{_datadir}/%{name}
 %ninja_build
 popd
 
 # 3D models
-pushd %{name}-packages3D-%{p3dver}/
+pushd %{name}-packages3D-%{version}/
 %cmake \
 	-G Ninja \
-	-DCMAKE_CXX_STANDARD=%{cxxstd} \
 	-DKICAD_DATA=%{_datadir}/%{name}
 %ninja_build
 popd
 
 # Documentation (HTML only)
-pushd %{name}-doc-%{docver}/
+pushd %{name}-doc-%{version}/
 %cmake \
 	-G Ninja \
-	-DCMAKE_CXX_STANDARD=%{cxxstd} \
 	-DADOC_TOOLCHAIN="ASCIIDOCTOR" \
 	-DKICAD_DOC_PATH=%{_docdir}/kicad/help \
 	-DPDF_GENERATOR=none \
 	-DBUILD_FORMATS=html
-%ninja_build
+%ninja_build -j1
 popd
 
 ############################
@@ -228,35 +217,36 @@ for desktopfile in %{buildroot}%{_datadir}/applications/*.desktop ; do
 done
 
 # Templates
-pushd %{name}-templates-%{tplver}/
+pushd %{name}-templates-%{version}/
 %ninja_install -C build
 cp -p LICENSE.md ../LICENSE-templates.md
 popd
 
 # Symbol libraries
-pushd %{name}-symbols-%{symver}/
+pushd %{name}-symbols-%{version}/
 %ninja_install -C build
 cp -p LICENSE.md ../LICENSE-symbols.md
 popd
 
 # Footprint libraries
-pushd %{name}-footprints-%{footver}/
+pushd %{name}-footprints-%{version}/
 %ninja_install -C build
 cp -p LICENSE.md ../LICENSE-footprints.md
 popd
 
 # 3D models
-pushd %{name}-packages3D-%{p3dver}/
+pushd %{name}-packages3D-%{version}/
 %ninja_install -C build
 popd
 
 # Documentation
-pushd %{name}-doc-%{docver}/
+pushd %{name}-doc-%{version}/
 %ninja_install -C build
 popd
 
 # find dupes
-%fdupes %{buildroot}/%{_datadir}/kicad/
+%fdupes %{buildroot}/%{_docdir}/%{name}/help
+%fdupes %{buildroot}/%{_datadir}/%{name}
 %fdupes %{buildroot}%{_datadir}/icons/hicolor
 for lang in ca de en es fr id it ja pl ru zh ; do
     %fdupes %{buildroot}%{_docdir}/kicad/help/$lang
@@ -281,18 +271,20 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
 %{python3_sitearch}/pcbnew.py
 %{_datadir}/%{name}/
 %{_datadir}/applications/*.desktop
+%{_datadir}/bash-completion/completions/*
 %{_datadir}/icons/hicolor/*/apps/*.*
 %{_datadir}/icons/hicolor/*/mimetypes/application-x-*.*
 %{_datadir}/mime/packages/*.xml
+%{_datadir}/zsh/site-functions/*
 %{_metainfodir}/*.metainfo.xml
 %license LICENSE*
 %exclude %{_datadir}/%{name}/3dmodels/*
 
 %files	packages3d
 %{_datadir}/%{name}/3dmodels/*.3dshapes
-%license %{name}-packages3D-%{p3dver}/LICENSE*
+%license %{name}-packages3D-%{version}/LICENSE*
 
 %files	doc
 %{_docdir}/%{name}/help/
 %exclude %{_docdir}/%{name}/AUTHORS.txt
-%license %{name}-doc-%{docver}/LICENSE*
+%license %{name}-doc-%{version}/LICENSE*

@@ -1,5 +1,14 @@
-addFilter("E: incoherent-version-in-name")
-addFilter("E: devel-file-in-non-devel-package")
-# false positives
+# package has its own .so files
+addFilter("W: devel-file-in-non-devel-package")
+# False positives
 addFilter("E: executable-in-library-package")
 addFilter("E: non-versioned-file-in-library-package")
+# Package has documentation package, man pages not required
+addFilter("W: no-manual-page-for-binary")
+# Internal python scripts
+addFilter("E: script-without-shebang")
+# Upstream issue
+addFilter("E: incorrect-fsf-address")
+# Result of running fdupes
+addFilter("W: files-duplicate")
+addFilter("W: cross-directory-hard-link")
