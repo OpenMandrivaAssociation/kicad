@@ -1,6 +1,6 @@
 Name:		kicad
-Version:	10.0.0
-Release:	2
+Version:	10.0.1
+Release:	1
 Summary:	EDA software suite for creation of schematic diagrams and PCBs
 URL:		https://www.kicad.org
 License:	GPL-3.0-or-later
@@ -58,6 +58,7 @@ BuildRequires:	python-wxpython >= 4.0
 BuildRequires:	shared-mime-info
 BuildRequires:	swig
 BuildRequires:	wxgtku3.2-devel
+BuildRequires:	rpm-memory-constraints
 
 ############################
 # Documentation
@@ -116,6 +117,8 @@ Documentation for KiCad.
 
 ############################
 %build
+
+%limit_build -m 2048
 
 export CFLAGS="%{optflags}"
 export CXXFLAGS="%{optflags}"
@@ -193,7 +196,7 @@ pushd %{name}-doc-%{version}/
 	-DKICAD_DOC_PATH=%{_docdir}/kicad/help \
 	-DPDF_GENERATOR=none \
 	-DBUILD_FORMATS=html
-%ninja_build -j1
+%ninja_build
 popd
 
 ############################
@@ -245,12 +248,12 @@ pushd %{name}-doc-%{version}/
 popd
 
 # find dupes
-%fdupes %{buildroot}/%{_docdir}/%{name}/help
-%fdupes %{buildroot}/%{_datadir}/%{name}
+%fdupes %{buildroot}%{_datadir}/%{name}
 %fdupes %{buildroot}%{_datadir}/icons/hicolor
-for lang in ca de en es fr id it ja pl ru zh ; do
-    %fdupes %{buildroot}%{_docdir}/kicad/help/$lang
-done
+%fdupes %{buildroot}%{_docdir}/%{name}/help
+# for lang in ca de en es fr id it ja pl ru zh ; do
+#     %%fdupes %%{buildroot}%%{_docdir}/kicad/help/$lang
+# done
 
 %find_lang %{name}
 
