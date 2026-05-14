@@ -1,5 +1,5 @@
 Name:		kicad
-Version:	10.0.2
+Version:	10.0.3
 Release:	1
 Summary:	EDA software suite for creation of schematic diagrams and PCBs
 URL:		https://www.kicad.org
