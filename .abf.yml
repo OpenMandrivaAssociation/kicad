@@ -1,7 +1,7 @@
 sources:
-  kicad-10.0.5.tar.gz: 0985dd00949f4fd7917ad0ff18a5b27c3f03dd88
-  kicad-doc-10.0.5.tar.gz: 23a6703c1bd089733a3d67978ec87d7d5bcabe1f
-  kicad-footprints-10.0.5.tar.gz: f1259fff71728304ad990e1f4c6197359a57cbb7
-  kicad-packages3D-10.0.5.tar.gz: d4b1a8429e79685ba626115de699750a336ecc81
-  kicad-symbols-10.0.5.tar.gz: 63034b68aa45e8b383eaee0768fe3de8be9ff1f2
-  kicad-templates-10.0.5.tar.gz: 1a7108e803f552f87a5485b26fdda622c9a95f9d
+  kicad-10.0.7.tar.gz: 5898bc84af9be8b7e3eb3d4dda8f3fe1ad5ac917
+  kicad-doc-10.0.7.tar.gz: 05cf232fa57d02e6356548eb394fecbcb3e6aba8
+  kicad-templates-10.0.7.tar.gz: 89b7fb5ffa09c5d3e94f2c411c124d9be3486b82
+  kicad-symbols-10.0.7.tar.gz: 36e4cf748bd7c8e048d383c90179241a388b9330
+  kicad-footprints-10.0.7.tar.gz: 0b74cf910457b0daec32f3ec31115ba6b809d102
+  kicad-packages3D-10.0.7.tar.gz: 6b69280a3775ff3d92d9741c3af220add6020031
