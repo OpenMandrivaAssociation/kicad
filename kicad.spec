@@ -118,9 +118,9 @@ Documentation for KiCad.
 ############################
 %build
 
-# 2048MB/job did not reduce parallelism on the 64GB builders (32 cores),
-# and lld was killed linking libkicommon and _pcbnew.kiface.
-%limit_build -m 32768
+# Two parallel links still get lld killed on the 64GB builders
+# (_pcbnew.kiface and _eeschema.kiface together). One job fits.
+%limit_build -m 65536
 
 export CFLAGS="%{optflags}"
 export CXXFLAGS="%{optflags}"
