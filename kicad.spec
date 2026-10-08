@@ -1,6 +1,6 @@
 Name:		kicad
 Version:	10.0.7
-Release:	1
+Release:	2
 Summary:	EDA software suite for creation of schematic diagrams and PCBs
 URL:		https://www.kicad.org
 License:	GPL-3.0-or-later
@@ -118,7 +118,9 @@ Documentation for KiCad.
 ############################
 %build
 
-%limit_build -m 2048
+# 2048MB/job did not reduce parallelism on the 64GB builders (32 cores),
+# and lld was killed linking libkicommon and _pcbnew.kiface.
+%limit_build -m 32768
 
 export CFLAGS="%{optflags}"
 export CXXFLAGS="%{optflags}"
