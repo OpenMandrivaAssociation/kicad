@@ -1,6 +1,6 @@
 Name:		kicad
 Version:	10.0.7
-Release:	2
+Release:	3
 Summary:	EDA software suite for creation of schematic diagrams and PCBs
 URL:		https://www.kicad.org
 License:	GPL-3.0-or-later
@@ -54,7 +54,8 @@ BuildRequires:	pkgconfig(source-highlight)
 BuildRequires:	pkgconfig(spnav)
 BuildRequires:	pkgconfig(zlib-ng)
 BuildRequires:	protobuf-compiler >= 30.2
-BuildRequires:	python-wxpython >= 4.0
+# 4.2.5-1 is the Python 3.14 module.
+BuildRequires:	python-wxpython >= 4.2.5-2
 BuildRequires:	shared-mime-info
 BuildRequires:	swig
 BuildRequires:	wxgtku3.2-devel
@@ -77,7 +78,8 @@ Requires:	pkgconfig(libsecret-1)
 Requires:	pkgconfig(ngspice)
 Requires:	pkgconfig(odbc)
 Requires:	pkgconfig(protobuf)
-Requires:	python-wxpython >= 4.0
+# 4.2.5-1 is the Python 3.14 module.
+Requires:	python-wxpython >= 4.2.5-2
 Suggests:	kicad
 
 Obsoletes:	%{name}-library < %{EVRD}
